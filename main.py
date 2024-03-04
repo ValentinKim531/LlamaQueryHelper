@@ -87,7 +87,16 @@ def search_with_llama(index, query):
         sparse_top_k=5,
         vector_store_query_mode="hybrid",
     )
-    response = query_engine.query(query)
+    query_modified = (f"Запрос: '{query}'. Выдели ключевые слово из Запроса, "
+                      f"и если по этим словам нет информации, то напиши только "
+                      f"'No results'")
+    print(query_modified)
+    response = query_engine.query(query_modified)
+    print(response.response)
+
+    if 'No results' in response.response:
+        logger.info("No results'")
+        return None
 
     if not response.response:
         logger.info("No information found in the indexed documents.")
